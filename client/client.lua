@@ -3,13 +3,14 @@ lib.locale()
 
 local function toggleNuiFrame(shouldShow)
     local userinfo = lib.callback.await('xyz_spawnmenu:server:updateUI', false) or { name = "Unknown", job = "Unemployed" }
-    
+
     SetNuiFocus(shouldShow, shouldShow)
     SendReactMessage('setVisible', shouldShow)
     SendReactMessage('userinfo', userinfo)
 end
 
 RegisterNetEvent('apartments:client:setupSpawnUI', function(cData)
+    if not cData or not cData.citizenid then return end
     local result = lib.callback.await('xyz_spawn:GetOwnedApartment', false, cData.citizenid)
 
     TriggerScreenblurFadeIn(500)
@@ -31,6 +32,7 @@ RegisterNetEvent('qb-spawn:client:openUI', function()
     DoScreenFadeIn(1000)
 
     Core.Functions.GetPlayerData(function(PlayerData)
+        if not PlayerData then return end
         TriggerEvent('apartments:client:setupSpawnUI', PlayerData)
     end)
 
