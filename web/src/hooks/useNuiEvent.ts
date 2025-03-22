@@ -1,5 +1,5 @@
-import {MutableRefObject, useEffect, useRef} from "react";
-import {noop} from "../utils/misc";
+import { MutableRefObject, useEffect, useRef, useCallback } from "react";
+import { noop } from "../utils/misc";
 
 interface NuiMessageData<T = unknown> {
   action: string;
@@ -9,41 +9,46 @@ interface NuiMessageData<T = unknown> {
 type NuiHandlerSignature<T> = (data: T) => void;
 
 /**
- * A hook that manage events listeners for receiving data from the client scripts
+ * A hook that manages event listeners for receiving data from the client scripts.
  * @param action The specific `action` that should be listened for.
- * @param handler The callback function that will handle data relayed by this hook
+ * @param handler The callback function that will handle data relayed by this hook.
  *
  * @example
- * useNuiEvent<{visibility: true, wasVisible: 'something'}>('setVisible', (data) => {
- *   // whatever logic you want
- * })
- *
- **/
-
-export const useNuiEvent = <T = any>(
+ * useNuiEvent<{ visibility: boolean; wasVisible: string }>("setVisible", (data) => {
+ *   // Handle event data here
+ * });
+ */
+export const useNuiEvent = <T = unknown>(
   action: string,
-  handler: (data: T) => void
+  handler: NuiHandlerSignature<T>
 ) => {
   const savedHandler: MutableRefObject<NuiHandlerSignature<T>> = useRef(noop);
 
-  // Make sure we handle for a reactive handler
+  // Stable reference for handler function
+  const stableHandler = useCallback((data: T) => {
+    if (savedHandler.current) {
+      savedHandler.current(data);
+    }
+  }, []);
+
   useEffect(() => {
-    savedHandler.current = handler;
+    savedHandler.current = handler || noop;
   }, [handler]);
 
   useEffect(() => {
     const eventListener = (event: MessageEvent<NuiMessageData<T>>) => {
-      const { action: eventAction, data } = event.data;
+      if (!event.data || typeof event.data !== "object") return;
 
-      if (savedHandler.current) {
-        if (eventAction === action) {
-          savedHandler.current(data);
-        }
+      const { action: eventAction, data } = event.data;
+      if (eventAction === action) {
+        stableHandler(data);
       }
     };
 
     window.addEventListener("message", eventListener);
-    // Remove Event Listener on component cleanup
-    return () => window.removeEventListener("message", eventListener);
-  }, [action]);
+    
+    return () => {
+      window.removeEventListener("message", eventListener);
+    };
+  }, [action, stableHandler]);
 };
