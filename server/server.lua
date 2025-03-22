@@ -7,22 +7,16 @@ AddEventHandler('onResourceStart', function(resource)
 end)
 
 local function hasApartment(cid)
-    if not cid or type(cid) ~= "string" then return false end
+    if not cid then return false end
     return MySQL.single.await('SELECT * FROM properties WHERE owner_citizenid = ? LIMIT 1', {cid}) ~= nil
 end
 
 lib.callback.register('xyz_spawn:GetOwnedApartment', function(source, cid)
     local Player = XYZ.Functions.GetPlayer(source)
-    if not Player then
-        return false
-    end
+    if not Player then return false end
 
     cid = cid or Player.PlayerData.citizenid
-    if hasApartment(cid) then
-        return MySQL.single.await('SELECT * FROM properties WHERE owner_citizenid = ? LIMIT 1', {cid})
-    else
-        return false
-    end
+    return MySQL.single.await('SELECT * FROM properties WHERE owner_citizenid = ? LIMIT 1', {cid}) or false
 end)
 
 lib.callback.register('qb-spawn:server:getOwnedHouses', function(_, cid)
@@ -42,6 +36,6 @@ lib.callback.register('xyz_spawnmenu:server:updateUI', function(source)
 
     return {
         name = (Player.PlayerData.charinfo.firstname or 'Unknown') .. ' ' .. (Player.PlayerData.charinfo.lastname or ''),
-        job = (Player.PlayerData.job and Player.PlayerData.job.label) or 'Unemployed'
+        job = Player.PlayerData.job and Player.PlayerData.job.label or 'Unemployed'
     }
 end)
