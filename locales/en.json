@@ -1,8 +1,8 @@
 {
-    "error": "Failed to-do this action!",
-    "success": "Successfully to-do this action!",
+    "error": "Failed to perform this action!",
+    "success": "Action completed successfully!",
 
-    "Loading": "Loading...",
+    "loading": "Loading...",
 
-    "Volume": "Volume: "
+    "volume": "Volume: "
 }
