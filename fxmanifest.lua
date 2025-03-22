@@ -1,35 +1,35 @@
 fx_version "cerulean"
-games {"gta5",}
+games { "gta5" }
 
-description "XYZ - Spawn Selection"
-author "MoneSuper"
+lua54 'yes'
+
+description "Rewritten version of XYZ Spawn By MoneSuper"
+author "DaemonAlex"
 version '1.0.0'
 
 ui_page 'web/build/index.html'
 
-shared_script {
-    '@ox_lib/init.lua',
+shared_scripts {
+    '@ox_lib/init.lua'
 }
 
-client_script {
-	"client/**/*",
+client_scripts {
+    "client/**/*"
 }
 
-server_script {
-	"server/**/*",
-	'@oxmysql/lib/MySQL.lua',
+server_scripts {
+    "server/**/*",
+    '@oxmysql/lib/MySQL.lua'
 }
-
 
 files {
-	'web/build/index.html',
-	'web/build/**/*',
-	'locales/en.json',
+    'web/build/index.html',
+    'web/build/**/*',
+    'locales/en.json'
 }
 
+-- Uncomment this if using escrow protection
 -- escrow_ignore {
--- 	'shared/shared.lua',
--- 	'locales/en.json',
---   }
-
-lua54 'yes'
+--     'shared/shared.lua',
+--     'locales/en.json'
+-- }
