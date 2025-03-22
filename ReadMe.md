@@ -1,4 +1,4 @@
-# XYZ-Spawn
+# QBX-Spawn spawn rewritten from xyz-spawn by XYZ Studios
 
 ## 🚀 Previews
 
@@ -10,4 +10,4 @@
 
 ## 🛠️ READ ME
 
-### **This is a spawn menu that works with QBCore the backend code needs improvements and changes this resource is writen in ReactJS and includes the UI and NO SUPPORT will be provided!**
+### **This is a spawn menu that works with QBX. Rewritten and fully lint-free. This resource is written in ReactJS and includes the UI, and NO SUPPORT will be provided!**  
