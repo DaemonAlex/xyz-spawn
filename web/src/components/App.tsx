@@ -1,16 +1,11 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, memo } from 'react';
 import { debugData } from '../utils/debugData';
 import Sidebar from '../components/navbar';
-import { MantineProvider, Transition } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import HeroText from '../components/intro';
 import { useNuiEvent } from '../hooks/useNuiEvent';
 
-debugData([
-  {
-    action: 'setVisible',
-    data: true,
-  },
-]);
+debugData([{ action: 'setVisible', data: true }]);
 
 const IsNew = createContext<IsNew | null>(null);
 
@@ -22,15 +17,18 @@ interface IsNew {
 const App: React.FC = () => {
   const [isNew, setNew] = useState(false);
 
-  useNuiEvent<boolean>('IsNew', (value) => {
-    setNew(value);
-  });
+  useEffect(() => {
+    useNuiEvent<boolean>('IsNew', setNew);
+  }, []);
 
   return (
     <MantineProvider theme={{ colorScheme: 'dark' }}>
-      {isNew ? <HeroText /> : <Sidebar />}
+      {isNew ? <MemoizedHeroText /> : <MemoizedSidebar />}
     </MantineProvider>
   );
 };
+
+const MemoizedSidebar = memo(Sidebar);
+const MemoizedHeroText = memo(HeroText);
 
 export default App;
