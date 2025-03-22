@@ -1,24 +1,22 @@
 const path = require("path");
+
 module.exports = {
   webpack: {
     configure: (webpackConfig) => {
-      // Because CEF has issues with loading source maps properly atm,
-      // lets use the best we can get in line with `eval-source-map`
-      if (webpackConfig.mode === 'development' && process.env.IN_GAME_DEV) {
-        webpackConfig.devtool = 'eval-source-map'
-        webpackConfig.output.path = path.join(__dirname, 'build')
+      // Use the best available source map when in in-game development mode
+      if (webpackConfig.mode === 'development' && process.env.IN_GAME_DEV === '1') {
+        webpackConfig.devtool = 'eval-source-map';
+        webpackConfig.output.path = path.resolve(__dirname, 'build');
       }
-
-      return webpackConfig
+      return webpackConfig;
     }
   },
 
   devServer: (devServerConfig) => {
-    if (process.env.IN_GAME_DEV) {
-     // Used for in-game dev mode
-     devServerConfig.devMiddleware.writeToDisk = true
+    if (process.env.IN_GAME_DEV === '1') {
+      devServerConfig.devMiddleware = devServerConfig.devMiddleware || {};
+      devServerConfig.devMiddleware.writeToDisk = true;
     }
-
-    return devServerConfig
+    return devServerConfig;
   }
-}
+};
