@@ -5,7 +5,7 @@
 ![1](https://i.imgur.com/BnhPYFU.png)
 ![2](https://i.imgur.com/ajebAhy.png)
 ![3](https://i.imgur.com/d7GFRri.png)
-![alt text](https://i.imgur.com/InN9zTh.png)
+
 
 
 ## 🛠️ READ ME
